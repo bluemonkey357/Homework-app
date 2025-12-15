@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-graduation-cap"></i> Homework App</h2>
+            <button class="close-btn" id="closeSidebar"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-link active" data-page="home">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#" class="nav-link" data-page="tasks">
+                <i class="fas fa-list-check"></i> Tasks
+            </a>
+            <a href="#" class="nav-link" data-page="add-task">
+                <i class="fas fa-plus-circle"></i> Add Task
+            </a>
+            <a href="#" class="nav-link" data-page="leaderboard">
+                <i class="fas fa-ranking-star"></i> Leaderboard
+            </a>
+            <a href="#" class="nav-link" data-page="stats">
+                <i class="fas fa-chart-line"></i> Stats
+            </a>
+            <a href="#" class="nav-link" data-page="challenges">
+                <i class="fas fa-bullseye"></i> Challenges
+            </a>
+            <a href="#" class="nav-link" data-page="timer">
+                <i class="fas fa-clock"></i> Timer
+            </a>
+            <a href="#" class="nav-link" data-page="music">
+                <i class="fas fa-music"></i> Relaxing Music
+            </a>
+            <a href="#" class="nav-link" data-page="medals">
+                <i class="fas fa-medal"></i> Medals
+            </a>
+            <a href="#" class="nav-link" data-page="history">
+                <i class="fas fa-history"></i> History
+            </a>
+            <a href="#" class="nav-link" data-page="ai-assistant">
+                <i class="fas fa-robot"></i> AI Assistant
+            </a>
+            <a href="#" class="nav-link" data-page="settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="user-info">
+                <span id="userTagDisplay" class="user-tag"></span>
+                <span id="userPoints" class="points">0 points</span>
+                <i class="fas fa-trophy"></i>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div class="page active" id="home-page">
+            <div class="welcome-section">
+                <h1>Welcome Back! 📚</h1>
+                <p class="date" id="currentDate"></p>
+            </div>
+
+            <!-- Level & XP Bar -->
+            <div class="level-section">
+                <div class="level-header">
+                    <div class="level-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Level <span id="levelDisplay">1</span></span>
+                    </div>
+                    <div class="combo-badge" id="comboDisplay" title="Complete tasks within 30 min to build combo!">
+                        <i class="fas fa-fire"></i>
+                        <span>0</span>
+                    </div>
+                    <div class="multiplier-badge" id="multiplierDisplay">1x</div>
+                </div>
+                <div class="xp-bar-container">
+                    <div class="xp-bar" id="xpBar"></div>
+                </div>
+                <p class="xp-text" id="xpDisplay">0 / 100 XP</p>
+            </div>
+
+            <!-- Weekly Goal -->
+            <div class="weekly-goal-section" id="goalProgress">
+                <div class="goal-header">
+                    <h3><i class="fas fa-bullseye"></i> Weekly Goal</h3>
+                    <span id="goalText">0 / 10 tasks</span>
+                </div>
+                <div class="goal-bar-container">
+                    <div class="goal-bar" id="goalBar"></div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-tasks"></i>
+                    <h3 id="totalTasks">0</h3>
+                    <p>Total Tasks</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 id="completedTasks">0</h3>
+                    <p>Completed</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <h3 id="pendingTasks">0</h3>
+                    <p>Pending</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-fire"></i>
+                    <h3 id="streakDays">0</h3>
+                    <p>Day Streak</p>
+                </div>
+            </div>
+
+            <!-- Personal Records -->
+            <div class="records-section">
+                <h2><i class="fas fa-trophy"></i> Personal Records</h2>
+                <div class="records-grid" id="personalRecords">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-btn" data-action="add-task">
+                        <i class="fas fa-plus"></i> Add New Task
+                    </button>
+                    <button class="action-btn" data-action="timer">
+                        <i class="fas fa-stopwatch"></i> Start Timer
+                    </button>
+                    <button class="action-btn" data-action="music">
+                        <i class="fas fa-headphones"></i> Play Music
+                    </button>
+                </div>
+            </div>
+
+            <div class="upcoming-tasks">
+                <h2>Upcoming Tasks</h2>
+                <div id="upcomingTasksList"></div>
+            </div>
+        </div>
+
+        <!-- Tasks Page -->
+        <div class="page" id="tasks-page">
+            <h1>My Tasks</h1>
+            <div class="filter-tabs">
+                <button class="tab-btn active" data-filter="all">All</button>
+                <button class="tab-btn" data-filter="pending">Pending</button>
+                <button class="tab-btn" data-filter="completed">Completed</button>
+            </div>
+            <div id="tasksList" class="tasks-container"></div>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div class="page" id="leaderboard-page">
+            <h1>🏆 Leaderboard</h1>
+            <p class="page-subtitle">Compete with other students and climb the ranks!</p>
+            
+            <div class="leaderboard-tabs">
+                <button class="lb-tab active" data-period="weekly">This Week</button>
+                <button class="lb-tab" data-period="monthly">This Month</button>
+                <button class="lb-tab" data-period="alltime">All Time</button>
+            </div>
+
+            <div class="your-rank-card">
+                <div class="rank-position">
+                    <span class="rank-number" id="yourRank">#1</span>
+                    <span class="rank-label">Your Rank</span>
+                </div>
+                <div class="rank-stats">
+                    <div class="rank-stat">
+                        <span class="stat-value" id="yourLbPoints">0</span>
+                        <span class="stat-label">Points</span>
+                    </div>
+                    <div class="rank-stat">
+                        <span class="stat-value" id="yourLbTasks">0</span>
+                        <span class="stat-label">Tasks</span>
+                    </div>
+                    <div class="rank-stat">
+                        <span class="stat-value" id="yourLbStreak">0</span>
+                        <span class="stat-label">Streak</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leaderboard-list" id="leaderboardList">
+                <!-- Leaderboard items will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Stats Page -->
+        <div class="page" id="stats-page">
+            <h1>📊 Your Statistics</h1>
+            <p class="page-subtitle">Track your productivity and progress</p>
+
+            <div class="stats-period-selector">
+                <button class="period-btn active" data-period="week">This Week</button>
+                <button class="period-btn" data-period="month">This Month</button>
+                <button class="period-btn" data-period="all">All Time</button>
+            </div>
+
+            <div class="stats-overview">
+                <div class="stat-box">
+                    <i class="fas fa-check-double"></i>
+                    <div class="stat-info">
+                        <h3 id="statTasksCompleted">0</h3>
+                        <p>Tasks Completed</p>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-star"></i>
+                    <div class="stat-info">
+                        <h3 id="statPointsEarned">0</h3>
+                        <p>Points Earned</p>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-fire-flame-curved"></i>
+                    <div class="stat-info">
+                        <h3 id="statBestStreak">0</h3>
+                        <p>Best Streak</p>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-clock"></i>
+                    <div class="stat-info">
+                        <h3 id="statStudyTime">0h</h3>
+                        <p>Study Time</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-charts">
+                <div class="chart-card">
+                    <h3>Daily Activity</h3>
+                    <div class="activity-chart" id="activityChart">
+                        <div class="chart-bars">
+                            <div class="chart-day">
+                                <div class="bar" data-day="mon"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Mon</span>
+                            </div>
+                            <div class="chart-day">
+                                <div class="bar" data-day="tue"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Tue</span>
+                            </div>
+                            <div class="chart-day">
+                                <div class="bar" data-day="wed"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Wed</span>
+                            </div>
+                            <div class="chart-day">
+                                <div class="bar" data-day="thu"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Thu</span>
+                            </div>
+                            <div class="chart-day">
+                                <div class="bar" data-day="fri"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Fri</span>
+                            </div>
+                            <div class="chart-day">
+                                <div class="bar" data-day="sat"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Sat</span>
+                            </div>
+                            <div class="chart-day">
+                                <div class="bar" data-day="sun"><div class="bar-fill" style="height: 0%"></div></div>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Subject Breakdown</h3>
+                    <div class="subject-breakdown" id="subjectBreakdown">
+                        <!-- Subject stats rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="weekly-report-card">
+                <h3>📋 Weekly Report</h3>
+                <div id="weeklyReport">
+                    <!-- Weekly report content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges Page -->
+        <div class="page" id="challenges-page">
+            <h1>🎯 Daily Challenges</h1>
+            <p class="page-subtitle">Complete challenges to earn bonus points!</p>
+
+            <div class="challenges-header">
+                <div class="challenge-streak-info">
+                    <i class="fas fa-fire"></i>
+                    <span><strong id="challengeStreak">0</strong> Day Streak</span>
+                </div>
+                <div class="challenge-reset-timer">
+                    <i class="fas fa-clock"></i>
+                    <span>Resets in <strong id="challengeResetTime">24:00:00</strong></span>
+                </div>
+            </div>
+
+            <div class="daily-goal">
+                <h3>Today's Goal</h3>
+                <div class="goal-progress">
+                    <div class="goal-bar">
+                        <div class="goal-fill" id="dailyGoalFill" style="width: 0%"></div>
+                    </div>
+                    <span id="dailyGoalText">0/3 tasks completed</span>
+                </div>
+                <p class="goal-reward">Complete 3 tasks today for <strong>+50 bonus points!</strong></p>
+            </div>
+
+            <div class="challenges-list">
+                <div class="challenge-card" data-challenge="speed">
+                    <div class="challenge-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="challenge-info">
+                        <h4>Speed Demon</h4>
+                        <p>Complete 2 tasks within 1 hour</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="speedProgress"></div></div>
+                            <span id="speedText">0/2</span>
+                        </div>
+                    </div>
+                    <div class="challenge-reward">+30 pts</div>
+                </div>
+
+                <div class="challenge-card" data-challenge="focus">
+                    <div class="challenge-icon"><i class="fas fa-brain"></i></div>
+                    <div class="challenge-info">
+                        <h4>Focus Master</h4>
+                        <p>Use the study timer for 25+ minutes</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="focusProgress"></div></div>
+                            <span id="focusText">0/25 min</span>
+                        </div>
+                    </div>
+                    <div class="challenge-reward">+25 pts</div>
+                </div>
+
+                <div class="challenge-card" data-challenge="priority">
+                    <div class="challenge-icon"><i class="fas fa-exclamation-circle"></i></div>
+                    <div class="challenge-info">
+                        <h4>Priority First</h4>
+                        <p>Complete a high-priority task</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="priorityProgress"></div></div>
+                            <span id="priorityText">0/1</span>
+                        </div>
+                    </div>
+                    <div class="challenge-reward">+40 pts</div>
+                </div>
+
+                <div class="challenge-card" data-challenge="variety">
+                    <div class="challenge-icon"><i class="fas fa-layer-group"></i></div>
+                    <div class="challenge-info">
+                        <h4>Variety Pack</h4>
+                        <p>Complete tasks from 3 different subjects</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="varietyProgress"></div></div>
+                            <span id="varietyText">0/3</span>
+                        </div>
+                    </div>
+                    <div class="challenge-reward">+35 pts</div>
+                </div>
+
+                <div class="challenge-card" data-challenge="earlybird">
+                    <div class="challenge-icon"><i class="fas fa-sun"></i></div>
+                    <div class="challenge-info">
+                        <h4>Early Bird</h4>
+                        <p>Complete a task before 9 AM</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="earlybirdProgress"></div></div>
+                            <span id="earlybirdText">0/1</span>
+                        </div>
+                    </div>
+                    <div class="challenge-reward">+20 pts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Task Page -->
+        <div class="page" id="add-task-page">
+            <h1>Add New Task</h1>
+            <form id="addTaskForm" class="task-form">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title</label>
+                    <input type="text" id="taskTitle" required placeholder="Enter task title">
+                </div>
+                <div class="form-group">
+                    <label for="taskSubject">Subject</label>
+                    <select id="taskSubject" required>
+                        <option value="">Select subject</option>
+                        <option value="Math">Math</option>
+                        <option value="Science">Science</option>
+                        <option value="English">English</option>
+                        <option value="History">History</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskDueDate">Due Date</label>
+                    <input type="date" id="taskDueDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskPriority">Priority</label>
+                    <select id="taskPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskNotes">Notes (Optional)</label>
+                    <textarea id="taskNotes" rows="4" placeholder="Add any additional notes..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Add Task</button>
+            </form>
+        </div>
+
+        <!-- Timer Page -->
+        <div class="page" id="timer-page">
+            <h1>Study Timer</h1>
+            <div class="timer-container">
+                <div class="timer-display">
+                    <div class="time" id="timerDisplay">25:00</div>
+                </div>
+                <div class="timer-controls">
+                    <button class="timer-btn" id="startTimer">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="timer-btn" id="pauseTimer">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="timer-btn" id="resetTimer">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                <div class="timer-presets">
+                    <button class="preset-btn" data-minutes="25">25 min</button>
+                    <button class="preset-btn" data-minutes="45">45 min</button>
+                    <button class="preset-btn" data-minutes="60">60 min</button>
+                </div>
+                <div class="custom-timer">
+                    <label for="customMinutes">Custom Time (minutes):</label>
+                    <input type="number" id="customMinutes" min="1" max="180" placeholder="Enter minutes">
+                    <button class="timer-btn" id="setCustomTimer">Set Timer</button>
+                </div>
+                <div class="timer-music-controls">
+                    <h3>Background Music</h3>
+                    <div class="music-toggle">
+                        <label class="switch">
+                            <input type="checkbox" id="timerMusicToggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Play music while studying</span>
+                    </div>
+                    <select id="timerMusicSelect" class="music-select" disabled>
+                        <option value="">Select music...</option>
+                        <option value="0">Lo-Fi Study Beats</option>
+                        <option value="1">Calm Piano</option>
+                        <option value="2">Nature Sounds</option>
+                        <option value="3">Ambient Waves</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Page -->
+        <div class="page" id="music-page">
+            <h1>Relaxing Music</h1>
+            <div class="music-player">
+                <div class="playlist">
+                    <div class="music-track" data-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+                        <i class="fas fa-music"></i>
+                        <span>Lo-Fi Study Beats</span>
+                        <button class="play-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="music-track" data-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">
+                        <i class="fas fa-music"></i>
+                        <span>Calm Piano</span>
+                        <button class="play-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="music-track" data-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">
+                        <i class="fas fa-music"></i>
+                        <span>Nature Sounds</span>
+                        <button class="play-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div class="music-track" data-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3">
+                        <i class="fas fa-music"></i>
+                        <span>Ambient Waves</span>
+                        <button class="play-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                </div>
+                <audio id="audioPlayer" controls loop></audio>
+                <p class="music-note">Note: These are sample tracks. For real relaxing music, add your own MP3 files!</p>
+            </div>
+        </div>
+
+        <!-- Medals Page -->
+        <div class="page" id="medals-page">
+            <h1>Your Medals & Achievements</h1>
+            <p class="page-subtitle">Collect medals by completing challenges and reaching milestones!</p>
+            
+            <h2 class="medal-section-title">📋 Task Milestones</h2>
+            <div class="medals-grid">
+                <div class="medal-card locked" data-medal="first-task">
+                    <i class="fas fa-star"></i>
+                    <h3>First Task</h3>
+                    <p>Complete your first task</p>
+                </div>
+                <div class="medal-card locked" data-medal="5-tasks">
+                    <i class="fas fa-award"></i>
+                    <h3>Getting Started</h3>
+                    <p>Complete 5 tasks</p>
+                </div>
+                <div class="medal-card locked" data-medal="10-tasks">
+                    <i class="fas fa-medal"></i>
+                    <h3>Dedicated</h3>
+                    <p>Complete 10 tasks</p>
+                </div>
+                <div class="medal-card locked" data-medal="25-tasks">
+                    <i class="fas fa-gem"></i>
+                    <h3>Task Master</h3>
+                    <p>Complete 25 tasks</p>
+                </div>
+                <div class="medal-card locked" data-medal="50-tasks">
+                    <i class="fas fa-crown"></i>
+                    <h3>Homework Hero</h3>
+                    <p>Complete 50 tasks</p>
+                </div>
+                <div class="medal-card locked" data-medal="100-tasks">
+                    <i class="fas fa-dragon"></i>
+                    <h3>Legendary</h3>
+                    <p>Complete 100 tasks</p>
+                </div>
+            </div>
+
+            <h2 class="medal-section-title">🔥 Streak Achievements</h2>
+            <div class="medals-grid">
+                <div class="medal-card locked" data-medal="3-day-streak">
+                    <i class="fas fa-fire"></i>
+                    <h3>On Fire!</h3>
+                    <p>3 day streak</p>
+                </div>
+                <div class="medal-card locked" data-medal="7-day-streak">
+                    <i class="fas fa-fire-flame-curved"></i>
+                    <h3>Week Warrior</h3>
+                    <p>7 day streak</p>
+                </div>
+                <div class="medal-card locked" data-medal="14-day-streak">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Unstoppable</h3>
+                    <p>14 day streak</p>
+                </div>
+                <div class="medal-card locked" data-medal="30-day-streak">
+                    <i class="fas fa-meteor"></i>
+                    <h3>Streak Legend</h3>
+                    <p>30 day streak</p>
+                </div>
+            </div>
+
+            <h2 class="medal-section-title">🏆 Competition & Points</h2>
+            <div class="medals-grid">
+                <div class="medal-card locked" data-medal="100-points">
+                    <i class="fas fa-coins"></i>
+                    <h3>Point Collector</h3>
+                    <p>Earn 100 points</p>
+                </div>
+                <div class="medal-card locked" data-medal="500-points">
+                    <i class="fas fa-sack-dollar"></i>
+                    <h3>Point Hoarder</h3>
+                    <p>Earn 500 points</p>
+                </div>
+                <div class="medal-card locked" data-medal="1000-points">
+                    <i class="fas fa-treasure-chest"></i>
+                    <h3>Point Master</h3>
+                    <p>Earn 1000 points</p>
+                </div>
+                <div class="medal-card locked" data-medal="challenge-complete">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Challenger</h3>
+                    <p>Complete all daily challenges</p>
+                </div>
+                <div class="medal-card locked" data-medal="perfect-week">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Perfect Week</h3>
+                    <p>Complete all tasks in a week</p>
+                </div>
+                <div class="medal-card locked" data-medal="speed-demon">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Speed Demon</h3>
+                    <p>Complete 5 speed challenges</p>
+                </div>
+            </div>
+
+            <h2 class="medal-section-title">⏱️ Study Time</h2>
+            <div class="medals-grid">
+                <div class="medal-card locked" data-medal="1-hour-study">
+                    <i class="fas fa-hourglass-start"></i>
+                    <h3>Focused</h3>
+                    <p>Study for 1 hour total</p>
+                </div>
+                <div class="medal-card locked" data-medal="5-hour-study">
+                    <i class="fas fa-hourglass-half"></i>
+                    <h3>Studious</h3>
+                    <p>Study for 5 hours total</p>
+                </div>
+                <div class="medal-card locked" data-medal="10-hour-study">
+                    <i class="fas fa-hourglass-end"></i>
+                    <h3>Study Machine</h3>
+                    <p>Study for 10 hours total</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div class="page" id="history-page">
+            <h1>Task History</h1>
+            <div id="historyList" class="history-container"></div>
+        </div>
+
+        <!-- AI Assistant Page -->
+        <div class="page" id="ai-assistant-page">
+            <h1><i class="fas fa-robot"></i> AI Study Assistant</h1>
+            <p class="ai-subtitle">Ask me anything about homework, study tips, or get help with concepts!</p>
+            
+            <div class="ai-chat-container">
+                <div class="ai-messages" id="aiMessages">
+                    <div class="ai-message bot">
+                        <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                        <div class="message-content">
+                            <p>Hi there! 👋 I'm your AI Study Assistant. I can help you with:</p>
+                            <ul>
+                                <li>📚 Explaining difficult concepts</li>
+                                <li>✍️ Study tips and techniques</li>
+                                <li>🧮 Math problems and solutions</li>
+                                <li>📝 Writing and grammar help</li>
+                                <li>🎯 Time management advice</li>
+                            </ul>
+                            <p>Just type your question below!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-input-container">
+                    <textarea id="aiInput" placeholder="Ask me anything..." rows="2"></textarea>
+                    <button id="aiSendBtn" class="ai-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ai-suggestions">
+                <p>Quick suggestions:</p>
+                <div class="suggestion-chips">
+                    <button class="suggestion-chip" data-question="How can I study more effectively?">Study tips</button>
+                    <button class="suggestion-chip" data-question="Can you explain the Pythagorean theorem?">Math help</button>
+                    <button class="suggestion-chip" data-question="How do I stay focused while studying?">Focus tips</button>
+                    <button class="suggestion-chip" data-question="What are good note-taking methods?">Note-taking</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="page" id="settings-page">
+            <h1>Settings</h1>
+            <div class="settings-container">
+                <!-- Profile Customization Section -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-user-circle"></i> Profile Customization</h3>
+                    <div class="setting-item">
+                        <label for="userName">Your Name</label>
+                        <input type="text" id="userName" placeholder="Enter your name">
+                    </div>
+                    <div class="setting-item">
+                        <label for="titleSelect">Your Title</label>
+                        <select id="titleSelect" onchange="selectedTitle = this.value; updateProfileDisplay(); saveUserData();">
+                            <option value="Rookie">Rookie</option>
+                        </select>
+                        <p class="setting-hint">Unlock more titles by leveling up!</p>
+                    </div>
+                    <div class="setting-item">
+                        <label>Your Avatar</label>
+                        <div class="avatar-grid" id="avatarOptions">
+                            <!-- Rendered by JS -->
+                        </div>
+                        <p class="setting-hint">Unlock more avatars at levels 10, 20, and 30!</p>
+                    </div>
+                </div>
+                
+                <!-- Appearance Section -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-palette"></i> Appearance</h3>
+                    <div class="setting-item">
+                        <label for="theme">Theme</label>
+                        <select id="theme">
+                            <option value="light">☀️ Light</option>
+                            <option value="dark">🌙 Dark</option>
+                        </select>
+                        <p class="setting-hint">Unlock more themes by leveling up!</p>
+                    </div>
+                </div>
+                
+                <!-- Weekly Goal Section -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-bullseye"></i> Weekly Goal</h3>
+                    <div class="setting-item">
+                        <label for="weeklyGoalTarget">Tasks per week target</label>
+                        <input type="number" id="weeklyGoalTarget" min="1" max="100" value="10" onchange="weeklyGoal.target = parseInt(this.value) || 10; updateGoalDisplay(); saveUserData();">
+                    </div>
+                </div>
+                
+                <!-- Preferences Section -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-cog"></i> Preferences</h3>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="notifications">
+                            Enable Notifications
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="soundEffects" checked>
+                            Sound Effects
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Account Section -->
+                <div class="settings-section danger-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Account</h3>
+                    <div class="setting-item">
+                        <button class="submit-btn" onclick="logoutUser()" style="width: 100%;">Switch Account / Logout</button>
+                    </div>
+                    <div class="setting-item">
+                        <button class="danger-btn" onclick="deleteAccount()">Delete My Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Signup Page -->
+    <div class="auth-page" id="authPage">
+        <div class="auth-container">
+            <div class="auth-header">
+                <i class="fas fa-graduation-cap auth-logo"></i>
+                <h1>Homework Tracker</h1>
+                <p>Stay organized, get more done!</p>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="signin">Sign In</button>
+                <button class="auth-tab" data-tab="signup">Create Account</button>
+            </div>
+
+            <!-- Sign In Form -->
+            <div class="auth-form active" id="signin-form">
+                <h2>Welcome Back! 👋</h2>
+                <p>Sign in with your personal tag</p>
+                <form id="signinForm">
+                    <div class="form-group">
+                        <label for="signinTag">Your Tag</label>
+                        <input type="text" id="signinTag" placeholder="e.g., StudyMaster#1234" required>
+                        <small>Enter the tag you created when you signed up</small>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign In</button>
+                </form>
+            </div>
+
+            <!-- Create Account Form -->
+            <div class="auth-form" id="signup-form">
+                <h2>Create Your Account 🎉</h2>
+                <p>Choose a unique tag that's just for you!</p>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupTag">Create Your Tag</label>
+                        <input type="text" id="signupTag" placeholder="e.g., CoolStudent#1234" required>
+                        <small>Minimum 3 characters. This is your unique ID!</small>
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+                <div class="tag-suggestion">
+                    <p>Need ideas? Try one of these:</p>
+                    <div class="suggested-tag" id="suggestedTag"></div>
+                    <button type="button" class="use-suggestion-btn" id="useSuggestion">Use This Tag</button>
+                    <button type="button" class="refresh-suggestion-btn" id="refreshSuggestion">
+                        <i class="fas fa-refresh"></i> Generate New
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
